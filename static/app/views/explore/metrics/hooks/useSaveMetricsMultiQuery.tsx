@@ -89,7 +89,7 @@ export function useSaveMetricsMultiQuery() {
   }, [title, start, end, period, interval, projects, environments, metricQueries]);
 
   const saveQuery = useCallback(
-    async (newTitle: string, starred = true) => {
+    async (newTitle: string) => {
       const response = await api.requestPromise(
         `/organizations/${organization.slug}/explore/saved/`,
         {
@@ -97,7 +97,7 @@ export function useSaveMetricsMultiQuery() {
           data: {
             ...data,
             name: newTitle,
-            starred,
+            starred: true,
           },
         }
       );

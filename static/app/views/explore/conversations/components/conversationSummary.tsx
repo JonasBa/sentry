@@ -530,12 +530,10 @@ function AggregateItem({
   value,
   to,
   isLoading,
-  onClick,
 }: {
   label: string;
   value: React.ReactNode;
   isLoading?: boolean;
-  onClick?: () => void;
   to?: string;
 }) {
   const isInteractive = !!to && !isLoading;
@@ -557,7 +555,7 @@ function AggregateItem({
 
   if (isInteractive) {
     return (
-      <StyledLink to={to} onClick={onClick}>
+      <StyledLink to={to}>
         {content}
       </StyledLink>
     );
