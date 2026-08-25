@@ -2,7 +2,7 @@ import {GroupFixture} from 'sentry-fixture/group';
 import {OrganizationFixture} from 'sentry-fixture/organization';
 import {ProjectFixture} from 'sentry-fixture/project';
 
-import {render, screen, userEvent, waitFor} from 'sentry-test/reactTestingLibrary';
+import {act, render, screen, userEvent, waitFor} from 'sentry-test/reactTestingLibrary';
 
 import {OnboardingContextProvider} from 'sentry/components/onboarding/onboardingContext';
 import {EventOrGroupType} from 'sentry/types/event';
@@ -26,7 +26,6 @@ describe('AgentSetupWaiter', () => {
     });
   }
 
-  // The interval only has to outlast a render; the transitions are awaited.
   function renderWaiter() {
     return render(
       <OnboardingContextProvider>
@@ -36,7 +35,12 @@ describe('AgentSetupWaiter', () => {
     );
   }
 
+  beforeEach(() => {
+    jest.useFakeTimers();
+  });
+
   afterEach(() => {
+    jest.useRealTimers();
     MockApiClient.clearMockResponses();
     window.sessionStorage.clear();
   });
@@ -61,6 +65,10 @@ describe('AgentSetupWaiter', () => {
     mockProjects([agentProject]);
     mockIssues([]);
 
+    await act(async () => {
+      await jest.advanceTimersByTimeAsync(5000);
+    });
+
     expect(await screen.findByText('Project created:')).toBeInTheDocument();
     expect(screen.getByText('agent-witness')).toBeInTheDocument();
     // The second milestone is still outstanding
@@ -84,6 +92,10 @@ describe('AgentSetupWaiter', () => {
       }),
     ]);
 
+    await act(async () => {
+      await jest.advanceTimersByTimeAsync(5000);
+    });
+
     const link = await screen.findByRole('link', {
       name: /Sentry verification: agent-witness first error/,
     });
@@ -92,9 +104,10 @@ describe('AgentSetupWaiter', () => {
       expect.stringContaining(`/organizations/${organization.slug}/issues/42/`)
     );
 
-    await userEvent.tab();
+    const user = userEvent.setup({advanceTimers: jest.advanceTimersByTime});
+    await user.tab();
     expect(link).toHaveFocus();
-    await userEvent.tab();
+    await user.tab();
     expect(link).not.toContainElement(document.activeElement as HTMLElement);
 
     expect(screen.queryByText('Waiting for verification error')).not.toBeInTheDocument();
@@ -117,6 +130,10 @@ describe('AgentSetupWaiter', () => {
     mockProjects([preexistingProject, agentProject]);
     mockIssues([]);
 
+    await act(async () => {
+      await jest.advanceTimersByTimeAsync(5000);
+    });
+
     expect(await screen.findByText('Project created:')).toBeInTheDocument();
     expect(screen.getByText('agent-witness')).toBeInTheDocument();
   });
@@ -131,6 +148,10 @@ describe('AgentSetupWaiter', () => {
 
     mockProjects([preexistingProject, agentProject]);
     mockIssues([]);
+
+    await act(async () => {
+      await jest.advanceTimersByTimeAsync(5000);
+    });
 
     expect(await screen.findByText('Project created:')).toBeInTheDocument();
 

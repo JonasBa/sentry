@@ -91,12 +91,7 @@ export function transferProject(
 /**
  *  Adds a team to a project
  */
-function addTeamToProject(
-  api: Client,
-  orgSlug: string,
-  projectSlug: string,
-  team: Team
-) {
+function addTeamToProject(api: Client, orgSlug: string, projectSlug: string, team: Team) {
   const endpoint = `/projects/${orgSlug}/${projectSlug}/teams/${team.slug}/`;
 
   addLoadingMessage();
