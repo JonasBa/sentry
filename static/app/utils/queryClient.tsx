@@ -144,7 +144,7 @@ export function setApiQueryData<TResponseData>(
 }
 
 type ApiMutationVariables = {
-  method: 'PUT' | 'POST' | 'DELETE';
+  method: 'PUT' | 'POST' | 'PATCH' | 'DELETE';
   url: string;
   data?: Record<string, unknown>;
   options?: Pick<
