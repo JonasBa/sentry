@@ -54,6 +54,7 @@ export function closeModal() {
 
 type EmailVerificationModalOptions = {
   actionMessage?: string;
+  emailVerified?: boolean;
   onClose?: () => void;
 };
 
@@ -275,17 +276,20 @@ export async function openImportDashboardFromFileModal(
   });
 }
 
-export async function openReprocessEventModal(options: ReprocessEventModalOptions) {
+export async function openReprocessEventModal({
+  onClose,
+  ...options
+}: ReprocessEventModalOptions & {onClose?: () => void}) {
   const {ReprocessingEventModal} =
     await import('sentry/components/modals/reprocessEventModal');
 
-  openModal(deps => <ReprocessingEventModal {...deps} {...options} />);
+  openModal(deps => <ReprocessingEventModal {...deps} {...options} />, {onClose});
 }
 
-export async function demoSignupModal() {
+export async function demoSignupModal(options: ModalOptions = {}) {
   const {default: Modal, modalCss} = await import('sentry/components/modals/demoSignUp');
 
-  openModal(deps => <Modal {...deps} />, {modalCss});
+  openModal(deps => <Modal {...deps} {...options} />, {modalCss});
 }
 
 type DemoEndModalOptions = {
