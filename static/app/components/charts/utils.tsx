@@ -267,15 +267,14 @@ export function canIncludePreviousPeriod(
   return !!includePrevious;
 }
 
+const INCLUDE_PREVIOUS = true;
+
 export function shouldFetchPreviousPeriod({
-  includePrevious = true,
   period,
   start,
   end,
-}: {
-  includePrevious?: boolean;
-} & Pick<DateTimeObject, 'start' | 'end' | 'period'>) {
-  return !start && !end && canIncludePreviousPeriod(includePrevious, period);
+}: Pick<DateTimeObject, 'start' | 'end' | 'period'>) {
+  return !start && !end && canIncludePreviousPeriod(INCLUDE_PREVIOUS, period);
 }
 
 /**

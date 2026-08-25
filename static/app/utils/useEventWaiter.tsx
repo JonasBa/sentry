@@ -27,7 +27,6 @@ interface UseEventWaiterOptions {
   organization: Organization;
   project: Project;
   disabled?: boolean;
-  pollInterval?: number;
 }
 
 function getFirstEvent(eventType: EventType, resp: Project) {
@@ -58,7 +57,6 @@ export function useEventWaiter({
   organization,
   project,
   disabled,
-  pollInterval = DEFAULT_POLL_INTERVAL,
 }: UseEventWaiterOptions): FirstEvent {
   const shouldPoll = !disabled && !!organization && !!project;
 
@@ -87,7 +85,7 @@ export function useEventWaiter({
       if (projectData && getFirstEvent(eventType, projectData)) {
         return false;
       }
-      return pollInterval;
+      return DEFAULT_POLL_INTERVAL;
     },
     enabled: shouldPoll,
     staleTime: 0,

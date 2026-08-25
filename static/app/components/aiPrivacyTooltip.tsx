@@ -1,7 +1,7 @@
 import type {ComponentProps, ReactNode} from 'react';
 
 import {ExternalLink} from '@sentry/scraps/link';
-import {Tooltip, type TooltipProps} from '@sentry/scraps/tooltip';
+import {Tooltip} from '@sentry/scraps/tooltip';
 
 import {tct} from 'sentry/locale';
 
@@ -9,8 +9,7 @@ interface AiPrivacyNoticeProps {
   linkProps?: Partial<ComponentProps<typeof ExternalLink>>;
 }
 
-interface AiPrivacyTooltipProps
-  extends Omit<TooltipProps, 'title' | 'children'>, AiPrivacyNoticeProps {
+interface AiPrivacyTooltipProps {
   children: ReactNode;
 }
 
@@ -41,17 +40,9 @@ function AiPrivacyNoticeShort({linkProps = {}}: AiPrivacyNoticeProps) {
 /**
  * A tooltip wrapper for the privacy notice.
  */
-export function AiPrivacyTooltip({
-  children,
-  linkProps,
-  ...tooltipProps
-}: AiPrivacyTooltipProps) {
+export function AiPrivacyTooltip({children}: AiPrivacyTooltipProps) {
   return (
-    <Tooltip
-      isHoverable
-      title={<AiPrivacyNoticeShort linkProps={linkProps} />}
-      {...tooltipProps}
-    >
+    <Tooltip isHoverable title={<AiPrivacyNoticeShort />}>
       {children}
     </Tooltip>
   );

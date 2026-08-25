@@ -26,13 +26,6 @@ import {createIssueLink} from 'sentry/views/issueList/utils';
 const DEFAULT_POLL_INTERVAL_MS = 5000;
 const ICON_SIZE = SvgIcon.ICON_SIZES.xs;
 
-interface AgentSetupWaiterProps {
-  /**
-   * How often to poll for each milestone.
-   */
-  pollInterval?: number;
-}
-
 /**
  * Waits for the agent to create a project. Projects that already exist when this
  * mounts are recorded and ignored, so an org that arrives here with projects
@@ -129,13 +122,11 @@ const WaitingIndicator = styled('div')`
  * always listed so the shape of what's coming is visible from the start, and
  * each resolves in place as the agent gets there.
  */
-export function AgentSetupWaiter({
-  pollInterval = DEFAULT_POLL_INTERVAL_MS,
-}: AgentSetupWaiterProps) {
+export function AgentSetupWaiter() {
   const location = useLocation();
   const organization = useOrganization();
-  const project = useAgentCreatedProject(pollInterval);
-  const firstIssue = useFirstIssue(project, pollInterval);
+  const project = useAgentCreatedProject(DEFAULT_POLL_INTERVAL_MS);
+  const firstIssue = useFirstIssue(project, DEFAULT_POLL_INTERVAL_MS);
 
   return (
     <Stack gap="xs">

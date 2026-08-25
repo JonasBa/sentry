@@ -30,7 +30,7 @@ describe('AgentSetupWaiter', () => {
   function renderWaiter() {
     return render(
       <OnboardingContextProvider>
-        <AgentSetupWaiter pollInterval={20} />
+        <AgentSetupWaiter />
       </OnboardingContextProvider>,
       {organization}
     );

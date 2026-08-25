@@ -7,6 +7,8 @@ import {useEventWaiter} from 'sentry/utils/useEventWaiter';
 
 describe('useEventWaiter', () => {
   it('waits for the first project event and resolves the matching issue', async () => {
+    jest.useFakeTimers();
+
     const org = OrganizationFixture();
     const project = ProjectFixture({firstEvent: null});
 
@@ -23,7 +25,6 @@ describe('useEventWaiter', () => {
           eventType: 'error',
           organization: org,
           project,
-          pollInterval: 100,
         }),
       {organization: org}
     );
@@ -49,13 +50,15 @@ describe('useEventWaiter', () => {
       body: events,
     });
 
-    // Wait for the hook to resolve the first issue
-    await waitFor(() => {
-      expect(result.current).toEqual(events[0]);
+    await act(async () => {
+      await jest.advanceTimersByTimeAsync(5000);
     });
+
+    expect(result.current).toEqual(events[0]);
 
     // Verify polling stops after resolution
     projectApiMock.mockClear();
+    jest.useRealTimers();
   });
 
   it('returns true when first event has expired (no matching issue)', async () => {
@@ -81,7 +84,6 @@ describe('useEventWaiter', () => {
           eventType: 'error',
           organization: org,
           project,
-          pollInterval: 100,
         }),
       {organization: org}
     );
@@ -107,7 +109,6 @@ describe('useEventWaiter', () => {
           eventType: 'transaction',
           organization: org,
           project,
-          pollInterval: 100,
         }),
       {organization: org}
     );
@@ -134,7 +135,6 @@ describe('useEventWaiter', () => {
           organization: org,
           project,
           disabled: true,
-          pollInterval: 100,
         }),
       {organization: org}
     );
@@ -162,7 +162,6 @@ describe('useEventWaiter', () => {
           eventType: 'transaction',
           organization: org,
           project,
-          pollInterval: 100,
         }),
       {organization: org}
     );

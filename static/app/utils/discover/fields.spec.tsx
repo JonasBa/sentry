@@ -365,12 +365,6 @@ describe('generateAggregateFields', () => {
       generateAggregateFields(organization, [{field: 'not_real_aggregate()'}])
     ).toContainEqual({field: 'not_real_aggregate()'});
   });
-
-  it('excludes fields from aggregates', () => {
-    expect(generateAggregateFields(organization, [], ['count()'])).not.toContainEqual({
-      field: 'count()',
-    });
-  });
 });
 
 describe('fieldAlignment()', () => {

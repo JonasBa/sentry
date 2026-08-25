@@ -263,19 +263,21 @@ describe('Onboarding', () => {
         };
       });
 
+    sessionStorage.setItem(
+      'onboarding',
+      JSON.stringify({
+        selectedPlatform: {
+          key: nextJsProject.slug as PlatformKey,
+          type: 'framework',
+          language: 'javascript',
+          category: 'browser',
+          name: 'Next.js',
+          link: 'https://docs.sentry.io/platforms/javascript/guides/nextjs/',
+        },
+      })
+    );
     render(
-      <OnboardingContextProvider
-        initialValue={{
-          selectedPlatform: {
-            key: nextJsProject.slug as PlatformKey,
-            type: 'framework',
-            language: 'javascript',
-            category: 'browser',
-            name: 'Next.js',
-            link: 'https://docs.sentry.io/platforms/javascript/guides/nextjs/',
-          },
-        }}
-      >
+      <OnboardingContextProvider>
         <OnboardingWithoutContext />
       </OnboardingContextProvider>,
       {
@@ -329,19 +331,21 @@ describe('Onboarding', () => {
         };
       });
 
+    sessionStorage.setItem(
+      'onboarding',
+      JSON.stringify({
+        selectedPlatform: {
+          key: reactProject.slug as PlatformKey,
+          type: 'framework',
+          language: 'javascript',
+          category: 'browser',
+          name: 'React',
+          link: 'https://docs.sentry.io/platforms/javascript/guides/react/',
+        },
+      })
+    );
     render(
-      <OnboardingContextProvider
-        initialValue={{
-          selectedPlatform: {
-            key: reactProject.slug as PlatformKey,
-            type: 'framework',
-            language: 'javascript',
-            category: 'browser',
-            name: 'React',
-            link: 'https://docs.sentry.io/platforms/javascript/guides/react/',
-          },
-        }}
-      >
+      <OnboardingContextProvider>
         <OnboardingWithoutContext />
       </OnboardingContextProvider>,
       {
@@ -430,19 +434,21 @@ describe('Onboarding', () => {
         };
       });
 
+    sessionStorage.setItem(
+      'onboarding',
+      JSON.stringify({
+        selectedPlatform: {
+          key: reactProject.slug as PlatformKey,
+          type: 'framework',
+          language: 'javascript',
+          category: 'browser',
+          name: 'React',
+          link: 'https://docs.sentry.io/platforms/javascript/guides/react/',
+        },
+      })
+    );
     render(
-      <OnboardingContextProvider
-        initialValue={{
-          selectedPlatform: {
-            key: reactProject.slug as PlatformKey,
-            type: 'framework',
-            language: 'javascript',
-            category: 'browser',
-            name: 'React',
-            link: 'https://docs.sentry.io/platforms/javascript/guides/react/',
-          },
-        }}
-      >
+      <OnboardingContextProvider>
         <OnboardingWithoutContext />
       </OnboardingContextProvider>,
       {
@@ -516,7 +522,7 @@ describe('Onboarding', () => {
     sessionStorage.setItem('onboarding', JSON.stringify(initialContext));
 
     render(
-      <OnboardingContextProvider initialValue={initialContext}>
+      <OnboardingContextProvider>
         <OnboardingWithoutContext />
       </OnboardingContextProvider>,
       {
@@ -590,7 +596,7 @@ describe('Onboarding', () => {
     });
 
     type RenderOptions = {
-      initialContext?: Parameters<typeof OnboardingContextProvider>[0]['initialValue'];
+      initialContext?: Record<string, unknown>;
     };
 
     function renderFlow(
@@ -598,8 +604,11 @@ describe('Onboarding', () => {
       step: string,
       options?: RenderOptions
     ) {
+      if (options?.initialContext) {
+        sessionStorage.setItem('onboarding', JSON.stringify(options.initialContext));
+      }
       return render(
-        <OnboardingContextProvider initialValue={options?.initialContext}>
+        <OnboardingContextProvider>
           <OnboardingWithoutContext />
         </OnboardingContextProvider>,
         {
@@ -913,13 +922,15 @@ describe('Onboarding', () => {
         body: createdProject,
       });
 
+      sessionStorage.setItem(
+        'onboarding',
+        JSON.stringify({
+          selectedPlatform: nextJsPlatform,
+          selectedFeatures: [ProductSolution.ERROR_MONITORING],
+        })
+      );
       const {router} = render(
-        <OnboardingContextProvider
-          initialValue={{
-            selectedPlatform: nextJsPlatform,
-            selectedFeatures: [ProductSolution.ERROR_MONITORING],
-          }}
-        >
+        <OnboardingContextProvider>
           <OnboardingWithoutContext />
         </OnboardingContextProvider>,
         {
@@ -1157,7 +1168,7 @@ describe('Onboarding', () => {
       sessionStorage.setItem('onboarding', JSON.stringify(initialContext));
 
       render(
-        <OnboardingContextProvider initialValue={initialContext}>
+        <OnboardingContextProvider>
           <OnboardingWithoutContext />
         </OnboardingContextProvider>,
         {
@@ -1209,8 +1220,12 @@ describe('Onboarding', () => {
           body: [],
         });
 
+        sessionStorage.setItem(
+          'onboarding',
+          JSON.stringify({selectedPlatform: nextJsPlatform})
+        );
         return render(
-          <OnboardingContextProvider initialValue={{selectedPlatform: nextJsPlatform}}>
+          <OnboardingContextProvider>
             <OnboardingWithoutContext />
           </OnboardingContextProvider>,
           {
@@ -1282,9 +1297,7 @@ describe('Onboarding', () => {
       const {result} = renderHookWithProviders(() => useOnboardingContext(), {
         organization: scmOrganization,
         additionalWrapper: ({children}) => (
-          <OnboardingContextProvider initialValue={initialContext}>
-            {children}
-          </OnboardingContextProvider>
+          <OnboardingContextProvider>{children}</OnboardingContextProvider>
         ),
       });
 

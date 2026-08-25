@@ -457,25 +457,17 @@ export const useSeerExplorer = () => {
   );
 
   /** Resets the hook state. The session isn't actually created until the user sends a message. */
-  const startNewSession = useCallback(
-    ({onSuccess}: {onSuccess?: () => void} = {}) => {
-      switchToRun(null, {onSuccess});
-    },
-    [switchToRun]
-  );
+  const startNewSession = useCallback(() => {
+    switchToRun(null);
+  }, [switchToRun]);
 
   const sendMessage = useCallback(
-    (
-      query: string,
-      explicitInsertIndex?: number,
-      explicitRunId?: SeerExplorerRunId | null
-    ) => {
+    (query: string, explicitInsertIndex?: number) => {
       if (!orgSlug) {
         return;
       }
 
-      // explicitRunId: undefined = use current runId, null = force new run, number = use that run
-      const effectiveRunId = explicitRunId === undefined ? runId : explicitRunId;
+      const effectiveRunId = runId;
 
       // The snapshot is the source of location for both branches below, so take it
       // once here rather than only on the structured path.

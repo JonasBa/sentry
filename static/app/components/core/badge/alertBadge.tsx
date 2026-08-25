@@ -10,17 +10,9 @@ import {IncidentStatus} from 'sentry/views/alerts/types';
 
 interface AlertBadgeProps {
   /**
-   * There is no status for issue, this is to facilitate this custom usage.
-   */
-  isIssue?: boolean;
-  /**
    * The incident status
    */
   status?: IncidentStatus;
-  /**
-   * Includes a label
-   */
-  withText?: boolean;
 }
 
 type AlertBadgeStatus = IncidentStatus | 'issue';
@@ -77,7 +69,7 @@ function getAlertBadgeConfig(status: AlertBadgeStatus, theme: Theme): AlertBadge
  */
 export function AlertBadge(props: AlertBadgeProps) {
   const theme = useTheme();
-  const status = props.isIssue ? 'issue' : (props.status ?? IncidentStatus.CLOSED);
+  const status = props.status ?? IncidentStatus.CLOSED;
   const {text, icon: Icon, style} = getAlertBadgeConfig(status, theme);
 
   return (
@@ -89,12 +81,11 @@ export function AlertBadge(props: AlertBadgeProps) {
         width="26px"
         height="26px"
         radius="xs"
-        aria-label={props.withText ? undefined : text}
+        aria-label={text}
         style={style}
       >
         <Icon width={13} height={13} />
       </Flex>
-      {props.withText && <div>{text}</div>}
     </PaddedContainer>
   );
 }
